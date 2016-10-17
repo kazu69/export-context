@@ -1,0 +1,202 @@
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
+var _vm = require('vm');
+
+var _vm2 = _interopRequireDefault(_vm);
+
+var _fs = require('fs');
+
+var _fs2 = _interopRequireDefault(_fs);
+
+var _babelCore = require('babel-core');
+
+var babel = _interopRequireWildcard(_babelCore);
+
+var _jsdomGlobal = require('jsdom-global');
+
+var _jsdomGlobal2 = _interopRequireDefault(_jsdomGlobal);
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var path = _path2.default;
+
+var ExportContext = function () {
+  function ExportContext() {
+    var _this = this;
+
+    _classCallCheck(this, ExportContext);
+
+    this.initSandbox = {
+      global: global,
+      console: console,
+      require: function (_require) {
+        function require(_x) {
+          return _require.apply(this, arguments);
+        }
+
+        require.toString = function () {
+          return _require.toString();
+        };
+
+        return require;
+      }(function (name) {
+        return require(name);
+      }),
+      exports: exports,
+      __dirname: __dirname
+    };
+
+    this.sandbox = this.initSandbox;
+    this.cleanup = null;
+
+    // private methods
+    this.createGlobalDom = function () {
+      _this.cleanup = (0, _jsdomGlobal2.default)();
+      return _this.cleanup;
+    };
+
+    this.projectRoot = function () {
+      var setRoot = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      if (!setRoot) {
+        return path.resolve(__dirname, '..', '..');
+      }
+
+      return path.resolve(__dirname, setRoot.replace(/\/$/, ''));
+    };
+
+    this.createDom = function () {
+      var sandbox = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      _this.createGlobalDom();
+      return Object.assign(sandbox, {
+        document: global.document,
+        window: global.window
+      });
+    };
+
+    this.getCode = function () {
+      var filepath = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      if (!filepath) {
+        throw new Error('load file path is not exist');
+      }
+
+      if (options.babel) {
+        return _this.babelifyedCode(filepath, options.babel);
+      }
+
+      if (!options.encode) {
+        options.encode = 'utf8';
+      }
+      return _fs2.default.readFileSync(filepath, options.encode);
+    };
+
+    this.babelifyedCode = function (filepath) {
+      var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      if (!filepath) {
+        throw new Error('load file path is not exist');
+      }
+
+      var initOption = {
+        presets: ['latest']
+      };
+
+      var babelOption = Object.assign(initOption, option);
+      return babel.transformFileSync(filepath, babelOption).code;
+    };
+  }
+
+  _createClass(ExportContext, [{
+    key: 'addModules',
+    value: function addModules() {
+      var modules = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var sandbox = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      Object.keys(modules).forEach(function (key) {
+        sandbox[key] = require(modules[key]);
+      });
+
+      return sandbox;
+    }
+  }, {
+    key: 'addHtml',
+    value: function addHtml() {
+      var html = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+      if (!this.sandbox.document) {
+        this.createDom(this.sandbox);
+      }
+
+      this.sandbox.document.body.innerHTML = html;
+      return this.sandbox;
+    }
+  }, {
+    key: 'clear',
+    value: function clear() {
+      if (typeof this.cleanup === 'function') {
+        var __global = _lodash2.default.cloneDeep(global);
+        global = this.sandbox;
+        this.cleanup();
+        global = _lodash2.default.cloneDeep(__global);
+        __global = null;
+      }
+
+      this.sandbox = this.initSandbox;
+      return true;
+    }
+  }, {
+    key: 'run',
+    value: function run() {
+      var path = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      if (!path) {
+        throw new Error('load module path is not exist');
+      }
+
+      var appRoot = this.projectRoot(options.basePath);
+      var filePath = appRoot + '/' + path;
+
+      if (options.dom) {
+        this.sandbox = this.addModules(options.modules, this.createDom(this.initSandbox));
+      } else {
+        this.sandbox = this.addModules(options.modules, this.initSandbox);
+      }
+
+      if (options.html) {
+        this.addHtml(options.html);
+      }
+
+      var code = this.getCode(filePath, options);
+      var context = _vm2.default.createContext(this.sandbox);
+
+      _vm2.default.runInNewContext(code, context);
+      if (typeof this.cleanup === 'function') {
+        this.cleanup();
+      }
+
+      return context;
+    }
+  }]);
+
+  return ExportContext;
+}();
+
+module.exports = ExportContext;

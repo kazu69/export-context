@@ -1,0 +1,13 @@
+.npmignore
+.gitignore
+.nyc_output
+tests/
+node_modules/
+bower_components/
+coverage/
+tmp/
+temp/
+fixture/
+spec/
+vendor/
+dist/
