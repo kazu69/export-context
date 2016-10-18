@@ -1,5 +1,7 @@
 # export-context
 
+![](https://badge.fury.io/js/export-context.png)
+
 > A method that has not been export can be run via the context.
 > It will be able to unit test of unexport methods.
 > Further, if necessary of dom can test by creating a document in global.
@@ -99,3 +101,7 @@ If you want to set a pre-html adds html.
 ## example
 
 see at [example](example/)
+
+## License
+
+[MIT License](http://en.wikipedia.org/wiki/MIT_License)
