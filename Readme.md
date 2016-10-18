@@ -54,28 +54,44 @@ exportContext.clear()
 
 ## API
 
+### addModules(modules = {}, sandbox = {})
 
+Add the module to require at the time of context run.
 
-## Options
+### addHtml(html = '')
 
-### basePath
+Add the html to the context that you want to run.
+
+### clear()
+
+Remove the dom in the global from the execution context.
+
+### run(filePath = '', options = {})
+
+Run the contents of the passed file path. You can have the option, if necessary.
+Executed context will be returned.
+The options are as follows.
+
+#### Options
+
+##### basePath
 
 Specify the directory to be a base to load the file to be executed.
 (default: Projectroot).
 
-### babel
+##### babel
 
 Code using esnext will run transformer pile in the babel.
 You can set the options to be passed to the babel.
 (default: null)
 
-### dom
+##### dom
 
 If you run the code using DOM, please be true to this option.
 To provide the necessary properties to global, you will be able to use the dom api.
 (default: null)
 
-### html
+##### html
 
 If you want to set a pre-html adds html.
 (default: null)
