@@ -1,6 +1,7 @@
 # export-context
 
 ![](https://badge.fury.io/js/export-context.png)
+[![Build Status](https://travis-ci.org/kazu69/export-context.svg?branch=master)](https://travis-ci.org/kazu69/export-context)
 
 > A method that has not been export can be run via the context.
 > It will be able to unit test of unexport methods.
