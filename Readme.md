@@ -6,7 +6,7 @@
 > A method that has not been export can be run via the context.
 > It will be able to unit test of unexport methods.
 > Further, if necessary of dom can test by creating a document in global.
-> Esnext code is trans-pile using the babel.
+> Esnext code is transpile using the babel.
 
 ## install
 
