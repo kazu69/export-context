@@ -101,7 +101,13 @@ If you want to set a pre-html adds html.
 
 ## example
 
-see at [example](example/)
+see at below.
+
+- [using jquery with dom example](example/using-dom-jquery)
+- [using exnext example](example/esnext)
+- [using ava example](example/using-ava)
+- [using tape example](example/using-tape)
+- [using mocha chai example](example/using-mocha-chai)
 
 ## License
 
