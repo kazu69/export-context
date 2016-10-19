@@ -12,3 +12,4 @@ fixture/
 spec/
 vendor/
 dist/
+example/
