@@ -26,7 +26,7 @@ class ExportContext {
     this.createGlobalDom = () => {
       this.cleanup = jsdom();
       return this.cleanup;
-    }
+    };
 
     this.projectRoot = (setRoot = null) => {
       if (!setRoot) {
@@ -34,7 +34,7 @@ class ExportContext {
       }
 
       return path.resolve(__dirname, setRoot.replace(/\/$/, ''));
-    }
+    };
 
     this.createDom = (sandbox = {}) => {
       this.createGlobalDom();
@@ -42,7 +42,7 @@ class ExportContext {
         document: global.document,
         window: global.window
       });
-    }
+    };
 
     this.getCode = (filepath = '', options = {}) => {
       if (!filepath) {
@@ -57,7 +57,7 @@ class ExportContext {
         options.encode = 'utf8';
       }
       return fs.readFileSync(filepath, options.encode);
-    }
+    };
 
     this.babelifyedCode = (filepath, option = {}) => {
       if (!filepath) {
@@ -70,7 +70,7 @@ class ExportContext {
 
       const babelOption = Object.assign(initOption, option);
       return babel.transformFileSync(filepath, babelOption).code;
-    }
+    };
   }
 
   addModules(modules = {}, sandbox = {}) {
