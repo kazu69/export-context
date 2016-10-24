@@ -1,13 +1,13 @@
 {
   "name": "export-context",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Get the methods that are not exports as context. these methods becomes possible operations, such as unit testing",
   "main": "index.js",
   "scripts": {
     "lint": "xo src/*.js",
     "pretest": "npm set progress=false; npm i jquery --cache-min 86400",
     "test": "ava test/*.js",
-    "build": "babel --debug --presets latest -o lib/index.js src/index.js"
+    "build": "babel --debug --presets latest -o index.js src/index.js"
   },
   "keywords": [
     "context",
