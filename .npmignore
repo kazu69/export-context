@@ -13,3 +13,4 @@ spec/
 vendor/
 dist/
 example/
+yarn.lock

@@ -12,6 +12,10 @@
 
 ```sh
 npm install export-context --save-dev
+
+# or if using yarn
+
+yarn
 ```
 
 ## setup
