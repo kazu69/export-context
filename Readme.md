@@ -57,6 +57,10 @@ exportContext.clear()
 
 ## API
 
+### setFilepath(filePath = '')
+
+Set default load file path
+
 ### addModules(modules = {}, sandbox = {})
 
 Add the module to require at the time of context run.
@@ -103,8 +107,8 @@ If you want to set a pre-html adds html.
 
 see at below.
 
-- [using jquery with dom example](example/using-dom-jquery)
-- [using exnext example](example/esnext)
+- [using jquery with dom example](example/using-jquery)
+- [using esnext example](example/esnext)
 - [using ava example](example/using-ava)
 - [using tape example](example/using-tape)
 - [using mocha chai example](example/using-mocha-chai)
