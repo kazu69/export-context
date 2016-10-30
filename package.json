@@ -25,7 +25,7 @@
     "name": "kazu69",
     "url": "https://github.com/kazu69/export-context"
   },
- "repository": {
+  "repository": {
     "type": "git",
     "url": "git://github.com/kazu69/export-context.git"
   },
@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "babel-core": "^6.17.0",
+    "deepmerge": "^1.2.0",
     "jsdom": "^9.6.0",
     "jsdom-global": "^2.1.0"
   },
