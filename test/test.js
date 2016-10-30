@@ -119,17 +119,26 @@ test('run', t => {
         dom: true,
         html: '<div>test</div>'
     }
-    const addModules = sinon.spy(fn, 'addModules');
-    const addHtmlSpy = sinon.spy(fn, 'addHtml');
+    const getSandboxSpy = sinon.spy(fn, 'getSandbox');
+    const runContextSpy = sinon.spy(fn, 'runContext');
     const getCodeSpy = sinon.spy(fn, 'getCode');
-    const context = fn.run(path, option);
+    let context = fn.run(path, option);
 
     t.true(typeof(context.greet) === 'function');
     t.true(typeof(context.greeting) === 'function');
-    t.true(addHtmlSpy.withArgs(option.html).calledOnce);
-    t.true(addModules.calledOnce);
+    t.true(getSandboxSpy.withArgs(option).calledOnce);
+    t.true(runContextSpy.calledOnce);
     t.true(getCodeSpy.calledOnce);
-    fn.addHtml.restore();
-    fn.addModules.restore();
+
+    context = fn.run(option);
+
+    t.true(typeof(context.greet) === 'function');
+    t.true(typeof(context.greeting) === 'function');
+    t.true(getSandboxSpy.withArgs(option).calledTwice);
+    t.true(runContextSpy.calledTwice);
+    t.true(getCodeSpy.calledTwice);
+
+    fn.getSandbox.restore();
+    fn.runContext.restore();
     fn.getCode.restore();
 });

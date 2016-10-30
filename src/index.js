@@ -141,7 +141,7 @@ class ExportContext {
         this.sandbox = merge(this.sandbox, options.sandbox);
       }
 
-      if (options.html) {
+      if (options.html != '') {
         this.addHtml(options.html);
       }
 
@@ -260,19 +260,19 @@ class ExportContext {
       throw new Error('load module path is not exist');
     }
 
-    if(typeof path !== 'string' && path) {
+    if(Object.getPrototypeOf(path).constructor === Object) {
       options = path;
       path = this.filePath;
     }
 
-    const loadPath = path ? path : this.filePath;
+    const loadPath = typeof(path) === 'string' ? path : this.filePath;
     if(!this.filePath) {
       this.filePath = loadPath;
     }
+
     const appRoot = this.projectRoot(options.basePath);
     const filePath = `${appRoot}/${loadPath}`;
     const code = this.getCode(filePath, options);
-
     this.sandbox = this.getSandbox(options);
     const context = this.runContext({code: code, sandbox: this.sandbox});
 

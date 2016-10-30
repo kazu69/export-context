@@ -194,7 +194,7 @@ var ExportContext = function () {
         _this.sandbox = (0, _deepmerge2.default)(_this.sandbox, options.sandbox);
       }
 
-      if (options.html) {
+      if (options.html != '') {
         _this.addHtml(options.html);
       }
 
@@ -338,19 +338,21 @@ var ExportContext = function () {
         throw new Error('load module path is not exist');
       }
 
-      if (typeof path !== 'string' && path) {
+      if (Object.getPrototypeOf(path).constructor === Object) {
         options = path;
         path = this.filePath;
       }
 
-      var loadPath = path ? path : this.filePath;
+      var loadPath = typeof path === 'string' ? path : this.filePath;
       if (!this.filePath) {
         this.filePath = loadPath;
       }
+
       var appRoot = this.projectRoot(options.basePath);
       var filePath = appRoot + '/' + loadPath;
+      console.log(filePath);
       var code = this.getCode(filePath, options);
-
+      console.log(1);
       this.sandbox = this.getSandbox(options);
       var context = this.runContext({ code: code, sandbox: this.sandbox });
 
