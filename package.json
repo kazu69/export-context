@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "xo src/*.js",
-    "pretest": "npm set progress=false; npm i jquery --cache-min 86400",
+    "pretest": "npm set progress=false && npm i jquery --cache-min 86400 && npm run build",
     "test": "ava test/*.js",
     "build": "babel --debug --presets latest -o index.js src/index.js"
   },
