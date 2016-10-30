@@ -83,6 +83,8 @@ Run the contents of the passed file path. You can have the option, if necessary.
 Executed context will be returned.
 The options are as follows.
 
+If already in the path has been set (using the ```setfilePath()```), ```run(options)``` method can be performed only in the only option.
+
 #### Options
 
 ##### basePath
