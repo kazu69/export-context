@@ -12,6 +12,10 @@
 
 ```sh
 npm install export-context --save-dev
+
+# or if using yarn
+
+yarn
 ```
 
 ## setup
@@ -57,6 +61,10 @@ exportContext.clear()
 
 ## API
 
+### setFilepath(filePath = '')
+
+Set default load file path
+
 ### addModules(modules = {}, sandbox = {})
 
 Add the module to require at the time of context run.
@@ -74,6 +82,8 @@ Remove the dom in the global from the execution context.
 Run the contents of the passed file path. You can have the option, if necessary.
 Executed context will be returned.
 The options are as follows.
+
+If already in the path has been set (using the ```setfilePath()```), ```run(options)``` method can be performed only in the only option.
 
 #### Options
 
@@ -103,8 +113,8 @@ If you want to set a pre-html adds html.
 
 see at below.
 
-- [using jquery with dom example](example/using-dom-jquery)
-- [using exnext example](example/esnext)
+- [using jquery with dom example](example/using-jquery)
+- [using esnext example](example/esnext)
 - [using ava example](example/using-ava)
 - [using tape example](example/using-tape)
 - [using mocha chai example](example/using-mocha-chai)

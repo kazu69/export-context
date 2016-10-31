@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "xo src/*.js",
-    "pretest": "npm set progress=false; npm i jquery --cache-min 86400",
+    "pretest": "npm set progress=false && npm i jquery --cache-min 86400 && npm run build",
     "test": "ava test/*.js",
     "build": "babel --debug --presets latest -o index.js src/index.js"
   },
@@ -25,7 +25,7 @@
     "name": "kazu69",
     "url": "https://github.com/kazu69/export-context"
   },
- "repository": {
+  "repository": {
     "type": "git",
     "url": "git://github.com/kazu69/export-context.git"
   },
@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "babel-core": "^6.17.0",
+    "deepmerge": "^1.2.0",
     "jsdom": "^9.6.0",
     "jsdom-global": "^2.1.0"
   },

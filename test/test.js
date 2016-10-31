@@ -54,6 +54,26 @@ test('babelifyedCode', t => {
     t.is(fn.babelifyedCode('fixtures/example.es6.js'), expect);
 });
 
+test('getSandbox', t => {
+    let expected = { sandbox: true };
+    let result = fn.getSandbox({sandbox: expected});
+    t.is(result.sandbox, expected.sandbox);
+
+    result = fn.getSandbox({sandbox: expected, dom: true });
+    t.true(result.hasOwnProperty('document'));
+    t.true(result.hasOwnProperty('window'));
+
+    const spy = sinon.spy(fn, 'addHtml');
+    result = fn.getSandbox({sandbox: expected, dom: true, html: '<div>test</div>'});
+    t.true(spy.calledOnce);
+    fn.addHtml.restore();
+});
+
+test('runContext', t => {
+    const context = fn.runContext({code: 'var test = true;'});
+    t.is(context.test, true)
+});
+
 test('addModules', t => {
     const modules = { $: 'jquery' };
     const sandbox = {};
@@ -64,14 +84,19 @@ test('addModules', t => {
 });
 
 test('addHtml', t => {
-    const spy = sinon.spy(fn, 'createDom');
     const html = '<div>test</div>';
     const sandbox = fn.addHtml(html);
     const body = sandbox.document.body;
 
-    t.true(spy.calledOnce);
+    t.true(sandbox.hasOwnProperty('document'));
+    t.true(sandbox.hasOwnProperty('window'));
     t.is(body.innerHTML, html);
-    fn.createDom.restore();
+});
+
+test('setFilepath', t => {
+    const path = 'fixtures/example.js'
+    const result = fn.setFilepath(path);
+    t.is(result, path);
 });
 
 test('clear', t => {
@@ -94,17 +119,26 @@ test('run', t => {
         dom: true,
         html: '<div>test</div>'
     }
-    const addModules = sinon.spy(fn, 'addModules');
-    const addHtmlSpy = sinon.spy(fn, 'addHtml');
+    const getSandboxSpy = sinon.spy(fn, 'getSandbox');
+    const runContextSpy = sinon.spy(fn, 'runContext');
     const getCodeSpy = sinon.spy(fn, 'getCode');
-    const context = fn.run(path, option);
+    let context = fn.run(path, option);
 
     t.true(typeof(context.greet) === 'function');
     t.true(typeof(context.greeting) === 'function');
-    t.true(addHtmlSpy.withArgs(option.html).calledOnce);
-    t.true(addModules.calledOnce);
+    t.true(getSandboxSpy.withArgs(option).calledOnce);
+    t.true(runContextSpy.calledOnce);
     t.true(getCodeSpy.calledOnce);
-    fn.addHtml.restore();
-    fn.addModules.restore();
+
+    context = fn.run(option);
+
+    t.true(typeof(context.greet) === 'function');
+    t.true(typeof(context.greeting) === 'function');
+    t.true(getSandboxSpy.withArgs(option).calledTwice);
+    t.true(runContextSpy.calledTwice);
+    t.true(getCodeSpy.calledTwice);
+
+    fn.getSandbox.restore();
+    fn.runContext.restore();
     fn.getCode.restore();
 });

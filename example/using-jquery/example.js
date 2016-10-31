@@ -9,3 +9,10 @@ function setText(text) {
 function getText() {
     return $('#example').text();
 }
+
+$(function() {
+    if(window && window.test) {
+        window.res = greet('Hello jQeury Ready');
+        console.log(window.res)
+    }
+});
