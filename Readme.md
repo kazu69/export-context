@@ -8,6 +8,8 @@
 > Further, if necessary of dom can test by creating a document in global.
 > Esnext code is transpile using the babel.
 
+[](media/export-context.png)
+
 ## install
 
 ```sh
