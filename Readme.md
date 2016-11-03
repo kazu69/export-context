@@ -1,5 +1,7 @@
 # export-context
 
+![export-context](media/export-context.png)
+
 ![](https://badge.fury.io/js/export-context.png)
 [![Build Status](https://travis-ci.org/kazu69/export-context.svg?branch=master)](https://travis-ci.org/kazu69/export-context)
 
@@ -7,8 +9,6 @@
 > It will be able to unit test of unexport methods.
 > Further, if necessary of dom can test by creating a document in global.
 > Esnext code is transpile using the babel.
-
-[](media/export-context.png)
 
 ## install
 
