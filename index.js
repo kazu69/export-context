@@ -350,9 +350,7 @@ var ExportContext = function () {
 
       var appRoot = this.projectRoot(options.basePath);
       var filePath = appRoot + '/' + loadPath;
-      console.log(filePath);
       var code = this.getCode(filePath, options);
-      console.log(1);
       this.sandbox = this.getSandbox(options);
       var context = this.runContext({ code: code, sandbox: this.sandbox });
 
