@@ -2,7 +2,7 @@
 .travis.yml
 .gitignore
 .nyc_output
-tests/
+test/
 node_modules/
 bower_components/
 coverage/
@@ -14,3 +14,4 @@ vendor/
 dist/
 example/
 media/
+src/
