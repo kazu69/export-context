@@ -11,7 +11,6 @@ const path = nativePath;
 class ExportContext {
   constructor() {
     this.initSandbox = {
-      global,
       console,
       require: name => {
         return require(name);
@@ -33,8 +32,15 @@ class ExportContext {
      * @api private
      */
     this.createGlobalDom = () => {
+      const __global = _.cloneDeep(global);
       this.cleanup = jsdom();
-      return this.cleanup;
+      const sandbox = Object.assign({}, {
+        document: global.document,
+        window: global.window
+      });
+      global = __global;
+
+      return sandbox;
     };
 
     /**
@@ -65,11 +71,7 @@ class ExportContext {
      * @api private
      */
     this.createDom = (sandbox = {}) => {
-      this.createGlobalDom();
-      return Object.assign(sandbox, {
-        document: global.document,
-        window: global.window
-      });
+      return Object.assign(sandbox, this.createGlobalDom());
     };
 
     /**
@@ -122,7 +124,7 @@ class ExportContext {
     };
 
     /**
-     * # getSandbox
+     * # setSandbox
      *
      * Set the sandbox.
      *
@@ -130,18 +132,18 @@ class ExportContext {
      * @return {Object} sandbox
      * @api private
      */
-    this.getSandbox = (options) => {
+    this.setSandbox = options => {
       if (options.dom) {
         this.sandbox = this.addModules(options.modules, this.createDom(this.initSandbox));
       } else {
         this.sandbox = this.addModules(options.modules, this.initSandbox);
       }
 
-      if(options.sandbox) {
+      if (options.sandbox) {
         this.sandbox = merge(this.sandbox, options.sandbox);
       }
 
-      if (options.html != '') {
+      if (options.html !== '') {
         this.addHtml(options.html);
       }
 
@@ -157,8 +159,8 @@ class ExportContext {
      * @return {Object} context
      * @api private
      */
-    this.runContext = (options) => {
-      if(!options.code) {
+    this.runContext = options => {
+      if (!options.code) {
         options.code = '';
       }
 
@@ -168,7 +170,6 @@ class ExportContext {
       vm.runInNewContext(options.code, context);
       return context;
     };
-
   }
 
   /**
@@ -201,7 +202,7 @@ class ExportContext {
    */
   addHtml(html = '') {
     if (!this.sandbox.document) {
-      this.createDom(this.sandbox);
+      this.sandbox = this.createDom(this.sandbox);
     }
 
     this.sandbox.document.body.innerHTML = html;
@@ -221,7 +222,9 @@ class ExportContext {
     if (!filePath) {
       throw new Error('load module path is not exist');
     }
-    return this.filePath = filePath;
+    this.filePath = filePath;
+
+    return this.filePath;
   }
 
   /**
@@ -260,23 +263,22 @@ class ExportContext {
       throw new Error('load module path is not exist');
     }
 
-    if(Object.getPrototypeOf(path).constructor === Object) {
+    if (Object.getPrototypeOf(path).constructor === Object) {
       options = path;
       path = this.filePath;
     }
 
-    const loadPath = typeof(path) === 'string' ? path : this.filePath;
-    if(!this.filePath) {
+    const loadPath = typeof path === 'string' ? path : this.filePath;
+    if (!this.filePath) {
       this.filePath = loadPath;
     }
 
     const appRoot = this.projectRoot(options.basePath);
     const filePath = `${appRoot}/${loadPath}`;
     const code = this.getCode(filePath, options);
-    this.sandbox = this.getSandbox(options);
-    const context = this.runContext({code: code, sandbox: this.sandbox});
+    this.sandbox = this.setSandbox(options);
+    const context = this.runContext({code, sandbox: this.sandbox});
 
-    vm.runInNewContext(code, context);
     if (typeof this.cleanup === 'function') {
       this.cleanup();
     }

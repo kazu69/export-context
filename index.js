@@ -45,7 +45,6 @@ var ExportContext = function () {
     _classCallCheck(this, ExportContext);
 
     this.initSandbox = {
-      global: global,
       console: console,
       require: function (_require) {
         function require(_x) {
@@ -77,8 +76,15 @@ var ExportContext = function () {
      * @api private
      */
     this.createGlobalDom = function () {
+      var __global = _lodash2.default.cloneDeep(global);
       _this.cleanup = (0, _jsdomGlobal2.default)();
-      return _this.cleanup;
+      var sandbox = Object.assign({}, {
+        document: global.document,
+        window: global.window
+      });
+      global = __global;
+
+      return sandbox;
     };
 
     /**
@@ -113,11 +119,7 @@ var ExportContext = function () {
     this.createDom = function () {
       var sandbox = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      _this.createGlobalDom();
-      return Object.assign(sandbox, {
-        document: global.document,
-        window: global.window
-      });
+      return Object.assign(sandbox, _this.createGlobalDom());
     };
 
     /**
@@ -175,7 +177,7 @@ var ExportContext = function () {
     };
 
     /**
-     * # getSandbox
+     * # setSandbox
      *
      * Set the sandbox.
      *
@@ -183,7 +185,7 @@ var ExportContext = function () {
      * @return {Object} sandbox
      * @api private
      */
-    this.getSandbox = function (options) {
+    this.setSandbox = function (options) {
       if (options.dom) {
         _this.sandbox = _this.addModules(options.modules, _this.createDom(_this.initSandbox));
       } else {
@@ -194,7 +196,7 @@ var ExportContext = function () {
         _this.sandbox = (0, _deepmerge2.default)(_this.sandbox, options.sandbox);
       }
 
-      if (options.html != '') {
+      if (options.html !== '') {
         _this.addHtml(options.html);
       }
 
@@ -265,7 +267,7 @@ var ExportContext = function () {
       var html = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
       if (!this.sandbox.document) {
-        this.createDom(this.sandbox);
+        this.sandbox = this.createDom(this.sandbox);
       }
 
       this.sandbox.document.body.innerHTML = html;
@@ -290,7 +292,9 @@ var ExportContext = function () {
       if (!filePath) {
         throw new Error('load module path is not exist');
       }
-      return this.filePath = filePath;
+      this.filePath = filePath;
+
+      return this.filePath;
     }
 
     /**
@@ -351,10 +355,9 @@ var ExportContext = function () {
       var appRoot = this.projectRoot(options.basePath);
       var filePath = appRoot + '/' + loadPath;
       var code = this.getCode(filePath, options);
-      this.sandbox = this.getSandbox(options);
+      this.sandbox = this.setSandbox(options);
       var context = this.runContext({ code: code, sandbox: this.sandbox });
 
-      _vm2.default.runInNewContext(code, context);
       if (typeof this.cleanup === 'function') {
         this.cleanup();
       }
