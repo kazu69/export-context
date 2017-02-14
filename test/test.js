@@ -82,11 +82,6 @@ test('addModules', t => {
     let res = fn.addModules(modules, sandbox);
 
     t.is(res.$, expected.$);
-
-    sandbox = { window: {} };
-    res = fn.addModules(modules, sandbox);
-
-    t.is(res.window.$, expected.$);
 });
 
 test('addHtml', t => {
