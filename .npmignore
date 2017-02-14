@@ -15,3 +15,5 @@ dist/
 example/
 media/
 src/
+.nyc_output/
+coverage/

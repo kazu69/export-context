@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "xo src/*.js",
-    "pretest": "npm set progress=false && npm i jquery --cache-min 86400 && npm run build",
-    "test": "ava test/*.js",
+    "pretest": "npm set progress=false && npm i jquery --cache-min 86400 && npm run lint && npm run build",
+    "test": "nyc ava test/*.js",
     "build": "babel --debug --presets latest -o index.js src/index.js"
   },
   "keywords": [
@@ -39,6 +39,7 @@
     "babel-core": "^6.17.0",
     "babel-preset-latest": "^6.16.0",
     "lodash": "^4.16.4",
+    "nyc": "^10.1.2",
     "sinon": "^1.17.6",
     "xo": "^0.16.0"
   },
