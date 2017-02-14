@@ -19,14 +19,16 @@ option.html = '<div id="example">This is example</div>';
 let ctx = fn.run('example/using-jquery/example.js', option);
 console.log(ctx.greet('Hello Private!')); // => Hello Private!
 
-// ctx.setText('Hello Private!');
-console.log(ctx.getText()); // => Hello Private!
-
 option.sandbox = { window: { test: true } };
 ctx = fn.run(option);
+console.log(ctx.getText());// => This is example
 
-ctx.$(ctx.document).on('DOMContentLoaded', function() {
-    setTimeout(function() {
+ctx.setText('Hello Private!');
+console.log(ctx.getText()); // => Hello Private!
+
+ctx.$(ctx.document).on('DOMContentLoaded', () => {
+    // wait for fired `DOMContentLoaded`
+    setTimeout(() => {
         console.log(ctx.window.res); // Hello jQeury Ready
     }, 10)
 })

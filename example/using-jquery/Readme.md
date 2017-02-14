@@ -5,11 +5,10 @@
 
 ```
 npm i jquery
-node ./index.js
+node ./example/using-jquery/index.js
 
 Hello Private!
 This is example
-Hello jQeury Ready
-Hello jQeury Ready
+Hello Private!
 Hello jQeury Ready
 ```
