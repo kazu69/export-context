@@ -15,8 +15,8 @@ const fn = new ExportContext;
 
 test('createGlobalDom', t => {
     const res = fn.createGlobalDom();
-    t.is(typeof(res), 'function');
-    t.is(res.name, 'cleanup');
+    t.is(typeof res.document, 'object');
+    t.is(typeof res.window, 'object');
 });
 
 test('projectRoot', t => {
@@ -54,17 +54,17 @@ test('babelifyedCode', t => {
     t.is(fn.babelifyedCode('fixtures/example.es6.js'), expect);
 });
 
-test('getSandbox', t => {
+test('setSandbox', t => {
     let expected = { sandbox: true };
-    let result = fn.getSandbox({sandbox: expected});
+    let result = fn.setSandbox({sandbox: expected});
     t.is(result.sandbox, expected.sandbox);
 
-    result = fn.getSandbox({sandbox: expected, dom: true });
+    result = fn.setSandbox({sandbox: expected, dom: true });
     t.true(result.hasOwnProperty('document'));
     t.true(result.hasOwnProperty('window'));
 
     const spy = sinon.spy(fn, 'addHtml');
-    result = fn.getSandbox({sandbox: expected, dom: true, html: '<div>test</div>'});
+    result = fn.setSandbox({sandbox: expected, dom: true, html: '<div>test</div>'});
     t.true(spy.calledOnce);
     fn.addHtml.restore();
 });
@@ -76,9 +76,10 @@ test('runContext', t => {
 
 test('addModules', t => {
     const modules = { $: 'jquery' };
-    const sandbox = {};
     const expected = { $: require('jquery') }
-    const res = fn.addModules(modules, sandbox);
+
+    let sandbox = {};
+    let res = fn.addModules(modules, sandbox);
 
     t.is(res.$, expected.$);
 });
@@ -119,14 +120,14 @@ test('run', t => {
         dom: true,
         html: '<div>test</div>'
     }
-    const getSandboxSpy = sinon.spy(fn, 'getSandbox');
+    const setSandboxSpy = sinon.spy(fn, 'setSandbox');
     const runContextSpy = sinon.spy(fn, 'runContext');
     const getCodeSpy = sinon.spy(fn, 'getCode');
     let context = fn.run(path, option);
 
     t.true(typeof(context.greet) === 'function');
     t.true(typeof(context.greeting) === 'function');
-    t.true(getSandboxSpy.withArgs(option).calledOnce);
+    t.true(setSandboxSpy.withArgs(option).calledOnce);
     t.true(runContextSpy.calledOnce);
     t.true(getCodeSpy.calledOnce);
 
@@ -134,11 +135,11 @@ test('run', t => {
 
     t.true(typeof(context.greet) === 'function');
     t.true(typeof(context.greeting) === 'function');
-    t.true(getSandboxSpy.withArgs(option).calledTwice);
+    t.true(setSandboxSpy.withArgs(option).calledTwice);
     t.true(runContextSpy.calledTwice);
     t.true(getCodeSpy.calledTwice);
 
-    fn.getSandbox.restore();
+    fn.setSandbox.restore();
     fn.runContext.restore();
     fn.getCode.restore();
 });

@@ -3,7 +3,7 @@ function greet(message) {
 }
 
 function setText(text) {
-    $('#example').text(text);
+    return $('#example').text(text);
 }
 
 function getText() {
