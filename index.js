@@ -217,10 +217,15 @@ var ExportContext = function () {
         options.code = '';
       }
 
+      if (!options.option) {
+        options.option = [];
+      }
+
       var sandbox = options.sandbox ? options.sandbox : _this.sandbox;
+      var option = options.option ? options.option : [];
       var context = _vm2.default.createContext(sandbox);
 
-      _vm2.default.runInNewContext(options.code, context);
+      _vm2.default.runInNewContext(options.code, context, option);
       return context;
     };
   }
@@ -355,8 +360,9 @@ var ExportContext = function () {
       var appRoot = this.projectRoot(options.basePath);
       var filePath = appRoot + '/' + loadPath;
       var code = this.getCode(filePath, options);
+      var vmOption = options.vm || [];
       this.sandbox = this.setSandbox(options);
-      var context = this.runContext({ code: code, sandbox: this.sandbox });
+      var context = this.runContext({ code: code, sandbox: this.sandbox, option: vmOption });
 
       if (typeof this.cleanup === 'function') {
         this.cleanup();

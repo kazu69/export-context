@@ -3,7 +3,7 @@ class Example {
         this.message = 'test';
     }
 
-    message() {
+    hello() {
         return this.message;
     }
 }
