@@ -164,10 +164,15 @@ class ExportContext {
         options.code = '';
       }
 
+      if (!options.option) {
+        options.option = [];
+      }
+
       const sandbox = options.sandbox ? options.sandbox : this.sandbox;
+      const option = options.option ? options.option : [];
       const context = vm.createContext(sandbox);
 
-      vm.runInNewContext(options.code, context);
+      vm.runInNewContext(options.code, context, option);
       return context;
     };
   }
@@ -276,8 +281,9 @@ class ExportContext {
     const appRoot = this.projectRoot(options.basePath);
     const filePath = `${appRoot}/${loadPath}`;
     const code = this.getCode(filePath, options);
+    const vmOption = options.vm || [];
     this.sandbox = this.setSandbox(options);
-    const context = this.runContext({code, sandbox: this.sandbox});
+    const context = this.runContext({code, sandbox: this.sandbox, option: vmOption});
 
     if (typeof this.cleanup === 'function') {
       this.cleanup();

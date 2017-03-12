@@ -5,11 +5,8 @@ import * as babel from 'babel-core';
 import sinon from 'sinon';
 import path from 'path';
 import fs from 'fs';
+import vm from 'vm';
 import ExportContext from '../index.js';
-
-const options = {
-    basePath: './'
-}
 
 const fn = new ExportContext;
 
@@ -70,8 +67,14 @@ test('setSandbox', t => {
 });
 
 test('runContext', t => {
-    const context = fn.runContext({code: 'var test = true;'});
-    t.is(context.test, true)
+    const spy = sinon.spy(vm, 'runInNewContext');
+    const option = {filename: 'file/to/path'}
+    const context = fn.runContext({code: 'var test = true;', sandbox: {}, option: option});
+    t.is(context.test, true);
+    t.true(spy.calledOnce);
+    console.log(spy.args[0])
+    t.is(spy.args[0][2].filename, option.filename);
+   spy.restore();
 });
 
 test('addModules', t => {
@@ -142,4 +145,19 @@ test('run', t => {
     fn.setSandbox.restore();
     fn.runContext.restore();
     fn.getCode.restore();
+});
+
+test('run with es6', t => {
+    const path = 'fixtures/example.es6.js';
+    const option = {
+        basePath: './test',
+        babel: {
+            presets: ['latest'],
+            plugins: ['transform-runtime']
+        }
+    }
+    let context = fn.run(path, option);
+    const example = new context.exports.default();
+
+    t.is(example.hello(), 'test');
 });

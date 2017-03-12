@@ -34,6 +34,14 @@ const options = {
     },
     dom: true,
     html: '<div class="box">example</div>'
+    vm: {
+        filename: <string>,
+        lineOffset: <number>,
+        columnOffset: <number>,
+        displayErrors: <boolean>,
+        timeout: <number>,
+        breakOnSigint: <boolean>
+    }
 };
 
 const modules = {
