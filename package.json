@@ -58,5 +58,10 @@
     "rules": {
       "no-native-reassign": "warn"
     }
+  },
+  "nyc": {
+    "exclude": [
+      "example/**/*.js"
+    ]
   }
 }
