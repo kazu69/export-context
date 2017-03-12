@@ -33,7 +33,7 @@ const options = {
         plugins: ['transform-runtime']
     },
     dom: true,
-    html: '<div class="box">example</div>'
+    html: '<div class="box">example</div>',
     vm: {
         filename: <string>,
         lineOffset: <number>,
@@ -67,6 +67,17 @@ const ctx = exportContext.run('TARGET/FILE/PATH.js', options);
 
 // clear sandbox dom settings
 exportContext.clear()
+```
+
+
+If the environment variable ```NODE_ENV``` is specified,
+it is reflected in the global variable and window object
+
+```js
+// set process.env.NODE_ENV = 'test'
+
+global.NODE_ENV // => test
+window.NODE_ENV // => test
 ```
 
 ## API

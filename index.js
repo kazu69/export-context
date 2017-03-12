@@ -63,6 +63,10 @@ var ExportContext = function () {
       __dirname: __dirname
     };
 
+    if (process.env.NODE_ENV) {
+      this.initSandbox.NODE_ENV = process.env.NODE_ENV;
+    }
+
     this.sandbox = this.initSandbox;
     this.cleanup = null;
     this.filePath = null;
@@ -78,6 +82,11 @@ var ExportContext = function () {
     this.createGlobalDom = function () {
       var __global = _lodash2.default.cloneDeep(global);
       _this.cleanup = (0, _jsdomGlobal2.default)();
+
+      if (process.env.NODE_ENV) {
+        global.window.NODE_ENV = process.env.NODE_ENV;
+      }
+
       var sandbox = Object.assign({}, {
         document: global.document,
         window: global.window

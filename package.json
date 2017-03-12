@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "xo src/*.js",
     "pretest": "npm set progress=false && npm i jquery --cache-min 86400 && npm run lint && npm run build",
-    "test": "nyc ava test/*.js",
+    "test": "NODE_ENV=test nyc ava test/*.js",
     "build": "babel --debug --presets latest -o index.js src/index.js"
   },
   "keywords": [
@@ -58,5 +58,10 @@
     "rules": {
       "no-native-reassign": "warn"
     }
+  },
+  "nyc": {
+    "exclude": [
+      "example/**/*.js"
+    ]
   }
 }

@@ -19,6 +19,10 @@ class ExportContext {
       __dirname
     };
 
+    if (process.env.NODE_ENV) {
+      this.initSandbox.NODE_ENV = process.env.NODE_ENV;
+    }
+
     this.sandbox = this.initSandbox;
     this.cleanup = null;
     this.filePath = null;
@@ -34,6 +38,11 @@ class ExportContext {
     this.createGlobalDom = () => {
       const __global = _.cloneDeep(global);
       this.cleanup = jsdom();
+
+      if (process.env.NODE_ENV) {
+        global.window.NODE_ENV = process.env.NODE_ENV;
+      }
+
       const sandbox = Object.assign({}, {
         document: global.document,
         window: global.window

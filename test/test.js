@@ -10,10 +10,15 @@ import ExportContext from '../index.js';
 
 const fn = new ExportContext;
 
+test('constructor', t => {
+    t.is(fn.sandbox.NODE_ENV, 'test');
+});
+
 test('createGlobalDom', t => {
     const res = fn.createGlobalDom();
     t.is(typeof res.document, 'object');
     t.is(typeof res.window, 'object');
+    t.is(res.window.NODE_ENV, 'test');
 });
 
 test('projectRoot', t => {
@@ -72,7 +77,6 @@ test('runContext', t => {
     const context = fn.runContext({code: 'var test = true;', sandbox: {}, option: option});
     t.is(context.test, true);
     t.true(spy.calledOnce);
-    console.log(spy.args[0])
     t.is(spy.args[0][2].filename, option.filename);
    spy.restore();
 });
