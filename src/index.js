@@ -200,6 +200,9 @@ class ExportContext {
   addModules(modules = {}, sandbox = {}) {
     Object.keys(modules).forEach(key => {
       sandbox[key] = require(modules[key]);
+      if (sandbox.window) {
+        sandbox.window[key] = require(modules[key]);
+      }
     });
 
     return sandbox;

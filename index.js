@@ -260,6 +260,9 @@ var ExportContext = function () {
 
       Object.keys(modules).forEach(function (key) {
         sandbox[key] = require(modules[key]);
+        if (sandbox.window) {
+          sandbox.window[key] = require(modules[key]);
+        }
       });
 
       return sandbox;
