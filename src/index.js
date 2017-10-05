@@ -2,7 +2,7 @@ import nativePath from 'path';
 import vm from 'vm';
 import fs from 'fs';
 import * as babel from 'babel-core';
-import jsdom from 'jsdom-global';
+import {jsdom} from 'jsdom';
 import _ from 'lodash';
 import merge from 'deepmerge';
 
@@ -15,6 +15,7 @@ class ExportContext {
       require: name => {
         return require(name);
       },
+      module,
       exports,
       __dirname
     };
@@ -37,16 +38,22 @@ class ExportContext {
      */
     this.createGlobalDom = () => {
       const __global = _.cloneDeep(global);
-      this.cleanup = jsdom();
+      const doc = jsdom('');
+      const win = doc.defaultView;
+      const tmpDoc = _.cloneDeep(global.document) || {};
+      const tmpWin = _.cloneDeep(global.window) || {};
 
-      if (process.env.NODE_ENV) {
+      const sandbox = Object.assign({}, {
+        document: Object.assign(tmpDoc, doc),
+        window: Object.assign(tmpWin, win)
+      });
+
+      console.log(process.env);
+
+      if (process.env && process.env.NODE_ENV) {
         global.window.NODE_ENV = process.env.NODE_ENV;
       }
 
-      const sandbox = Object.assign({}, {
-        document: global.document,
-        window: global.window
-      });
       global = __global;
 
       return sandbox;

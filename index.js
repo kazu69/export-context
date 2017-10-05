@@ -18,9 +18,7 @@ var _babelCore = require('babel-core');
 
 var babel = _interopRequireWildcard(_babelCore);
 
-var _jsdomGlobal = require('jsdom-global');
-
-var _jsdomGlobal2 = _interopRequireDefault(_jsdomGlobal);
+var _jsdom = require('jsdom');
 
 var _lodash = require('lodash');
 
@@ -59,6 +57,7 @@ var ExportContext = function () {
       }(function (name) {
         return require(name);
       }),
+      module: module,
       exports: exports,
       __dirname: __dirname
     };
@@ -81,16 +80,22 @@ var ExportContext = function () {
      */
     this.createGlobalDom = function () {
       var __global = _lodash2.default.cloneDeep(global);
-      _this.cleanup = (0, _jsdomGlobal2.default)();
+      var doc = (0, _jsdom.jsdom)('');
+      var win = doc.defaultView;
+      var tmpDoc = _lodash2.default.cloneDeep(global.document) || {};
+      var tmpWin = _lodash2.default.cloneDeep(global.window) || {};
 
-      if (process.env.NODE_ENV) {
+      var sandbox = Object.assign({}, {
+        document: Object.assign(tmpDoc, doc),
+        window: Object.assign(tmpWin, win)
+      });
+
+      console.log(process.env);
+
+      if (process.env && process.env.NODE_ENV) {
         global.window.NODE_ENV = process.env.NODE_ENV;
       }
 
-      var sandbox = Object.assign({}, {
-        document: global.document,
-        window: global.window
-      });
       global = __global;
 
       return sandbox;
