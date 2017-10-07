@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "xo src/*.js",
     "pretest": "npm set progress=false && npm i jquery --cache-min 86400 && npm run lint && npm run build",
-    "test": "NODE_ENV=test nyc ava test/*.js",
+    "test": "NODE_ENV=test ava test/*.js",
     "build": "babel --debug --presets latest -o index.js src/index.js"
   },
   "keywords": [
@@ -36,7 +36,7 @@
   "devDependencies": {
     "ava": "^0.22.0",
     "babel-cli": "^6.26.0",
-    "babel-core": "^6.17.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-latest": "^6.24.1",
     "lodash": "^4.17.4",
     "nyc": "^11.2.1",

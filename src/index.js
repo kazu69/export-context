@@ -2,8 +2,7 @@ import nativePath from 'path';
 import vm from 'vm';
 import fs from 'fs';
 import * as babel from 'babel-core';
-import {jsdom} from 'jsdom';
-import _ from 'lodash';
+import {JSDOM} from 'jsdom';
 import merge from 'deepmerge';
 
 const path = nativePath;
@@ -29,6 +28,26 @@ class ExportContext {
     this.filePath = null;
 
     /**
+     * # getInitState
+     *
+     * Return initial sandbox state
+     *
+     * @return {Object}
+     * @api private
+     */
+    this.getInitState = () => {
+      return {
+        console,
+        require: name => {
+          return require(name);
+        },
+        module,
+        exports,
+        __dirname
+      };
+    };
+
+    /**
      * # createGlobalDom
      *
      * Add the document and window objects in global scope allows you to dom operation
@@ -37,24 +56,16 @@ class ExportContext {
      * @api private
      */
     this.createGlobalDom = () => {
-      const __global = _.cloneDeep(global);
-      const doc = jsdom('');
-      const win = doc.defaultView;
-      const tmpDoc = _.cloneDeep(global.document) || {};
-      const tmpWin = _.cloneDeep(global.window) || {};
-
+      const win = (new JSDOM(`<body></body>`, {runScripts: 'dangerously'})).window;
+      const doc = win.document;
       const sandbox = Object.assign({}, {
-        document: Object.assign(tmpDoc, doc),
-        window: Object.assign(tmpWin, win)
+        document: doc,
+        window: win
       });
 
-      console.log(process.env);
-
       if (process.env && process.env.NODE_ENV) {
-        global.window.NODE_ENV = process.env.NODE_ENV;
+        sandbox.window.NODE_ENV = process.env.NODE_ENV;
       }
-
-      global = __global;
 
       return sandbox;
     };
@@ -156,10 +167,10 @@ class ExportContext {
       }
 
       if (options.sandbox) {
-        this.sandbox = merge(this.sandbox, options.sandbox);
+        this.sandbox = merge(options.sandbox, this.sandbox);
       }
 
-      if (options.html !== '') {
+      if (options.html) {
         this.addHtml(options.html);
       }
 
@@ -202,7 +213,7 @@ class ExportContext {
    * @param {Object} modules
    * @param {Object} sandbox
    * @return {Object} sandbox
-   * @api private
+   * @api public
    */
   addModules(modules = {}, sandbox = {}) {
     Object.keys(modules).forEach(key => {
@@ -229,7 +240,9 @@ class ExportContext {
       this.sandbox = this.createDom(this.sandbox);
     }
 
-    this.sandbox.document.body.innerHTML = html;
+    if (this.sandbox.document && html) {
+      this.sandbox.document.body.innerHTML = html;
+    }
     return this.sandbox;
   }
 
@@ -256,20 +269,12 @@ class ExportContext {
    *
    * Return the sandbox to the initial state.
    *
-   * @return {Boolena} true
+   * @return {Object} sandbox
    * @api public
    */
   clear() {
-    if (typeof this.cleanup === 'function') {
-      let __global = _.cloneDeep(global);
-      global = this.sandbox;
-      this.cleanup();
-      global = _.cloneDeep(__global);
-      __global = null;
-    }
-
-    this.sandbox = this.initSandbox;
-    return true;
+    this.sandbox = this.getInitState();
+    return this.sandbox;
   }
 
   /**

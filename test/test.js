@@ -14,6 +14,16 @@ test('constructor', t => {
     t.is(fn.sandbox.NODE_ENV, 'test');
 });
 
+test('getInitState', t => {
+    const res = fn.getInitState();
+
+    t.true(res.hasOwnProperty('console'));
+    t.true(res.hasOwnProperty('require'));
+    t.true(res.hasOwnProperty('module'));
+    t.true(res.hasOwnProperty('exports'));
+    t.true(res.hasOwnProperty('__dirname'));
+});
+
 test('createGlobalDom', t => {
     const res = fn.createGlobalDom();
     t.is(typeof res.document, 'object');
@@ -41,7 +51,7 @@ test('createDom', t => {
 
 test('getCode', t => {
     const babelifyedCodeSpy = sinon.spy(fn, 'babelifyedCode');
-    const path = 'fixtures/example.es6.js'
+    const path = 'test/fixtures/example.es6.js'
     const res = fn.getCode(path, { babel: { presets: ['latest'] }, encode: 'utf8'});
 
     t.true(babelifyedCodeSpy.calledOnce);
@@ -52,8 +62,8 @@ test('getCode', t => {
 
 test('babelifyedCode', t => {
     const option = { presets: ['latest'] };
-    const expect = babel.transformFileSync('fixtures/example.es6.js', option).code;
-    t.is(fn.babelifyedCode('fixtures/example.es6.js'), expect);
+    const expect = babel.transformFileSync('test/fixtures/example.es6.js', option).code;
+    t.is(fn.babelifyedCode('test/fixtures/example.es6.js'), expect);
 });
 
 test('setSandbox', t => {
@@ -121,8 +131,7 @@ test('clear', t => {
     }
     const context = fn.run(path, option);
     const response = fn.clear();
-    t.true(response);
-    t.is(undefined, context.document);
+    t.is(undefined, response.document);
 });
 
 test('run', t => {

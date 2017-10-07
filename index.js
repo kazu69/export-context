@@ -20,10 +20,6 @@ var babel = _interopRequireWildcard(_babelCore);
 
 var _jsdom = require('jsdom');
 
-var _lodash = require('lodash');
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
 var _deepmerge = require('deepmerge');
 
 var _deepmerge2 = _interopRequireDefault(_deepmerge);
@@ -71,6 +67,36 @@ var ExportContext = function () {
     this.filePath = null;
 
     /**
+     * # getInitState
+     *
+     * Return initial sandbox state
+     *
+     * @return {Object}
+     * @api private
+     */
+    this.getInitState = function () {
+      return {
+        console: console,
+        require: function (_require2) {
+          function require(_x2) {
+            return _require2.apply(this, arguments);
+          }
+
+          require.toString = function () {
+            return _require2.toString();
+          };
+
+          return require;
+        }(function (name) {
+          return require(name);
+        }),
+        module: module,
+        exports: exports,
+        __dirname: __dirname
+      };
+    };
+
+    /**
      * # createGlobalDom
      *
      * Add the document and window objects in global scope allows you to dom operation
@@ -79,24 +105,16 @@ var ExportContext = function () {
      * @api private
      */
     this.createGlobalDom = function () {
-      var __global = _lodash2.default.cloneDeep(global);
-      var doc = (0, _jsdom.jsdom)('');
-      var win = doc.defaultView;
-      var tmpDoc = _lodash2.default.cloneDeep(global.document) || {};
-      var tmpWin = _lodash2.default.cloneDeep(global.window) || {};
-
+      var win = new _jsdom.JSDOM('<body></body>', { runScripts: 'dangerously' }).window;
+      var doc = win.document;
       var sandbox = Object.assign({}, {
-        document: Object.assign(tmpDoc, doc),
-        window: Object.assign(tmpWin, win)
+        document: doc,
+        window: win
       });
 
-      console.log(process.env);
-
       if (process.env && process.env.NODE_ENV) {
-        global.window.NODE_ENV = process.env.NODE_ENV;
+        sandbox.window.NODE_ENV = process.env.NODE_ENV;
       }
-
-      global = __global;
 
       return sandbox;
     };
@@ -207,10 +225,10 @@ var ExportContext = function () {
       }
 
       if (options.sandbox) {
-        _this.sandbox = (0, _deepmerge2.default)(_this.sandbox, options.sandbox);
+        _this.sandbox = (0, _deepmerge2.default)(options.sandbox, _this.sandbox);
       }
 
-      if (options.html !== '') {
+      if (options.html) {
         _this.addHtml(options.html);
       }
 
@@ -253,7 +271,7 @@ var ExportContext = function () {
    * @param {Object} modules
    * @param {Object} sandbox
    * @return {Object} sandbox
-   * @api private
+   * @api public
    */
 
 
@@ -292,7 +310,9 @@ var ExportContext = function () {
         this.sandbox = this.createDom(this.sandbox);
       }
 
-      this.sandbox.document.body.innerHTML = html;
+      if (this.sandbox.document && html) {
+        this.sandbox.document.body.innerHTML = html;
+      }
       return this.sandbox;
     }
 
@@ -324,23 +344,15 @@ var ExportContext = function () {
      *
      * Return the sandbox to the initial state.
      *
-     * @return {Boolena} true
+     * @return {Object} sandbox
      * @api public
      */
 
   }, {
     key: 'clear',
     value: function clear() {
-      if (typeof this.cleanup === 'function') {
-        var __global = _lodash2.default.cloneDeep(global);
-        global = this.sandbox;
-        this.cleanup();
-        global = _lodash2.default.cloneDeep(__global);
-        __global = null;
-      }
-
-      this.sandbox = this.initSandbox;
-      return true;
+      this.sandbox = this.getInitState();
+      return this.sandbox;
     }
 
     /**
