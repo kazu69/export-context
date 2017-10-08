@@ -1,11 +1,11 @@
 {
   "name": "export-context",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Get the methods that are not exports as context. these methods becomes possible operations, such as unit testing",
   "main": "index.js",
   "scripts": {
-    "lint": "xo src/*.js",
-    "pretest": "npm set progress=false && npm i jquery --cache-min 86400 && npm run lint && npm run build",
+    "lint": " xo src/*.js",
+    "pretest": "npm run lint && npm run build",
     "test": "NODE_ENV=test nyc ava test/*.js",
     "build": "babel --debug --presets latest -o index.js src/index.js"
   },
@@ -34,29 +34,32 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "ava": "^0.16.0",
+    "ava": "^0.22.0",
     "babel-cli": "^6.16.0",
     "babel-core": "^6.17.0",
     "babel-preset-latest": "^6.16.0",
     "lodash": "^4.16.4",
-    "nyc": "^10.1.2",
-    "sinon": "^1.17.6",
-    "xo": "^0.16.0"
+    "nyc": "^11.2.1",
+    "sinon": "^4.0.1"
   },
   "engines": {
     "node": ">=4"
   },
   "dependencies": {
-    "babel-core": "^6.17.0",
-    "deepmerge": "^1.2.0",
-    "jsdom": "^9.6.0",
-    "jsdom-global": "^2.1.0"
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "deepmerge": "^1.5.2",
+    "jquery": "^3.2.1",
+    "jsdom": "^9.12.0",
+    "jsdom-global": "^2.1.1",
+    "xo": "^0.18.2"
   },
   "xo": {
     "esnext": true,
     "space": true,
     "rules": {
-      "no-native-reassign": "warn"
+      "no-native-reassign": "warn",
+      "no-global-assign": "warn"
     }
   },
   "nyc": {

@@ -60,6 +60,7 @@ var ExportContext = function () {
         return require(name);
       }),
       exports: exports,
+      module: module,
       __dirname: __dirname
     };
 
