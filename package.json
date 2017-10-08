@@ -50,7 +50,7 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "deepmerge": "^1.5.2",
     "jquery": "^3.2.1",
-    "jsdom": "^11.3.0",
+    "jsdom": "^10.1.0",
     "jsdom-global": "^3.0.2",
     "xo": "^0.18.2"
   },
