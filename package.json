@@ -51,7 +51,7 @@
     "deepmerge": "^1.5.2",
     "jquery": "^3.2.1",
     "jsdom": "^10.1.0",
-    "jsdom-global": "^3.0.2",
+    "jsdom-global": "^2.1.0",
     "xo": "^0.18.2"
   },
   "xo": {
