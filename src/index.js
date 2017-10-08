@@ -16,6 +16,7 @@ class ExportContext {
         return require(name);
       },
       exports,
+      module,
       __dirname
     };
 
