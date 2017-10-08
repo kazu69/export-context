@@ -1,6 +1,6 @@
 {
   "name": "export-context",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Get the methods that are not exports as context. these methods becomes possible operations, such as unit testing",
   "main": "index.js",
   "scripts": {
