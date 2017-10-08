@@ -41,7 +41,7 @@ test('createDom', t => {
 
 test('getCode', t => {
     const babelifyedCodeSpy = sinon.spy(fn, 'babelifyedCode');
-    const path = 'fixtures/example.es6.js'
+    const path = 'test/fixtures/example.es6.js'
     const res = fn.getCode(path, { babel: { presets: ['latest'] }, encode: 'utf8'});
 
     t.true(babelifyedCodeSpy.calledOnce);
@@ -52,8 +52,8 @@ test('getCode', t => {
 
 test('babelifyedCode', t => {
     const option = { presets: ['latest'] };
-    const expect = babel.transformFileSync('fixtures/example.es6.js', option).code;
-    t.is(fn.babelifyedCode('fixtures/example.es6.js'), expect);
+    const expect = babel.transformFileSync('test/fixtures/example.es6.js', option).code;
+    t.is(fn.babelifyedCode('test/fixtures/example.es6.js'), expect);
 });
 
 test('setSandbox', t => {
