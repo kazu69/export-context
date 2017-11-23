@@ -7,6 +7,7 @@ import path from 'path';
 import fs from 'fs';
 import vm from 'vm';
 import ExportContext from '../index.js';
+import domProperties from 'properties';
 
 const fn = new ExportContext;
 
@@ -19,6 +20,10 @@ test('createGlobalDom', t => {
     t.is(typeof res.document, 'object');
     t.is(typeof res.window, 'object');
     t.is(res.window.NODE_ENV, 'test');
+
+    domProperties.forEach(key => {
+        t.is(typeof res.window[key], 'function');
+    });
 });
 
 test('projectRoot', t => {

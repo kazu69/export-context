@@ -5,6 +5,7 @@ import * as babel from 'babel-core';
 import jsdom from 'jsdom-global';
 import _ from 'lodash';
 import merge from 'deepmerge';
+import domProperties from 'properties';
 
 const path = nativePath;
 
@@ -44,7 +45,14 @@ class ExportContext {
         global.window.NODE_ENV = process.env.NODE_ENV;
       }
 
-      const sandbox = Object.assign({}, {
+      const tmp = {};
+      domProperties.forEach(key => {
+        if (global[key]) {
+          tmp[key] = global.window[key];
+        }
+      });
+
+      const sandbox = Object.assign(tmp, {
         document: global.document,
         window: global.window
       });

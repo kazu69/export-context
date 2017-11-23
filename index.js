@@ -30,6 +30,10 @@ var _deepmerge = require('deepmerge');
 
 var _deepmerge2 = _interopRequireDefault(_deepmerge);
 
+var _properties = require('properties');
+
+var _properties2 = _interopRequireDefault(_properties);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -88,7 +92,14 @@ var ExportContext = function () {
         global.window.NODE_ENV = process.env.NODE_ENV;
       }
 
-      var sandbox = Object.assign({}, {
+      var tmp = {};
+      _properties2.default.forEach(function (key) {
+        if (global[key]) {
+          tmp[key] = global.window[key];
+        }
+      });
+
+      var sandbox = Object.assign(tmp, {
         document: global.document,
         window: global.window
       });
