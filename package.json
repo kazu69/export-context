@@ -40,7 +40,8 @@
     "babel-preset-latest": "^6.16.0",
     "lodash": "^4.16.4",
     "nyc": "^11.2.1",
-    "sinon": "^4.0.1"
+    "sinon": "^4.0.1",
+    "properties": "file:libs"
   },
   "engines": {
     "node": ">=4"

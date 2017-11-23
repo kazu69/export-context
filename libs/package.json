@@ -1,0 +1,8 @@
+{
+    "name": "properties",
+    "version": "0.0.1",
+    "description": "libs",
+    "author": "kazu69",
+    "private": true,
+    "main": "properties.js"
+  }
