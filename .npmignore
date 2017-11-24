@@ -18,3 +18,4 @@ src/
 .nyc_output/
 coverage/
 *.log
+yarn.lock
