@@ -1,6 +1,6 @@
 {
   "name": "export-context",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Get the methods that are not exports as context. these methods becomes possible operations, such as unit testing",
   "main": "index.js",
   "scripts": {
@@ -36,24 +36,22 @@
   "devDependencies": {
     "ava": "^0.22.0",
     "babel-cli": "^6.16.0",
-    "babel-core": "^6.17.0",
     "babel-preset-latest": "^6.16.0",
-    "lodash": "^4.16.4",
     "nyc": "^11.2.1",
     "sinon": "^4.0.1",
-    "properties": "file:libs"
+    "xo": "^0.18.2",
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0"
   },
   "engines": {
     "node": ">=4"
   },
   "dependencies": {
-    "babel-core": "^6.26.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
+    "lodash": "^4.16.4",    
     "deepmerge": "^1.5.2",
     "jquery": "^3.2.1",
     "jsdom": "^9.12.0",
-    "jsdom-global": "^2.1.1",
-    "xo": "^0.18.2"
+    "jsdom-global": "^2.1.1"
   },
   "xo": {
     "esnext": true,

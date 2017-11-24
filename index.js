@@ -30,7 +30,7 @@ var _deepmerge = require('deepmerge');
 
 var _deepmerge2 = _interopRequireDefault(_deepmerge);
 
-var _properties = require('properties');
+var _properties = require('./libs/properties');
 
 var _properties2 = _interopRequireDefault(_properties);
 

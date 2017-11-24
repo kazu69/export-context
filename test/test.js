@@ -7,7 +7,7 @@ import path from 'path';
 import fs from 'fs';
 import vm from 'vm';
 import ExportContext from '../index.js';
-import domProperties from 'properties';
+import domProperties from '../libs/properties';
 
 const fn = new ExportContext;
 

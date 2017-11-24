@@ -5,7 +5,7 @@ import * as babel from 'babel-core';
 import jsdom from 'jsdom-global';
 import _ from 'lodash';
 import merge from 'deepmerge';
-import domProperties from 'properties';
+import domProperties from './libs/properties';
 
 const path = nativePath;
 
