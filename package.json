@@ -36,22 +36,22 @@
   "devDependencies": {
     "ava": "^0.22.0",
     "babel-cli": "^6.16.0",
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-latest": "^6.16.0",
     "nyc": "^11.2.1",
     "sinon": "^4.0.1",
-    "xo": "^0.18.2",
-    "babel-core": "^6.26.0",
-    "babel-plugin-transform-runtime": "^6.23.0"
+    "xo": "^0.18.2"
   },
   "engines": {
     "node": ">=4"
   },
   "dependencies": {
-    "lodash": "^4.16.4",    
     "deepmerge": "^1.5.2",
     "jquery": "^3.2.1",
     "jsdom": "^9.12.0",
-    "jsdom-global": "^2.1.1"
+    "jsdom-global": "^2.1.1",
+    "lodash": "^4.16.4"
   },
   "xo": {
     "esnext": true,
