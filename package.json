@@ -34,12 +34,12 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "ava": "^0.22.0",
+    "ava": "^3.5.1",
     "babel-cli": "^6.16.0",
     "babel-core": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-latest": "^6.16.0",
-    "nyc": "^11.2.1",
+    "nyc": "^15.0.0",
     "sinon": "^4.0.1",
     "xo": "^0.18.2"
   },
